@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FactBox</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="importmap">
+        {
+            "imports": {
+                "@google/generative-ai": "https://esm.run/@google/generative-ai"
+            }
+        }
+    </script>
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+        const API_KEY = "AIzaSyDzvvyWVPs2jQqWgVqgcJ6AHpYtGPFCb1k";
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        
+        async function run() {
+            const prompt = "Generate a fresh new latest modern cool short unique and interesting fun and exciting but concise good fact related to computer science, tech, ai, education, , programming, coding, programming sports , developer society, general knowledge of coding, programming literature, computer history without using any emoji. Also keep it unique";
+            const result = await model.generateContent(prompt);
+            const response = result.response;
+            return response.text();
+        }
+
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#F333FF', '#33FFF3', '#FF33A1', '#A1FF33', '#5733FF', '#FF3380', '#3380FF', '#29AB87', '#645452', '#DFFF00', '#FFE5B4'];
+
+        function getRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function applyRandomShadows(element) {
+            const randomColor = getRandomColor();
+            element.style.boxShadow = `0 8px 69px -6px ${randomColor}`;
+            element.style.textShadow = `5px 5px 28px ${randomColor}`;
+        }
+
+        async function fetchRandomFact() {
+            try {
+                const response = await run();
+                return response;
+            } catch (error) {
+                console.error('Error fetching the fact:', error);
+                return 'Could not load a fact at this moment.';
+            }
+        }
+
+        async function typeText(element, text) {
+            element.innerHTML = '';
+            for (let i = 0; i < text.length; i++) {
+                element.innerHTML += text.charAt(i);
+                await new Promise(resolve => setTimeout(resolve, 30));
+            }
+        }
+
+        async function initialMessage() {
+            const factBox = document.getElementById('factbox');
+            const firstLine = "Hi, I'm your FactBox";
+            applyRandomShadows(factBox);
+            await typeText(factBox, firstLine);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            await typeText(factBox, "Click Me to continue ;");
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        async function displayRandomFact() {
+            document.getElementById('btn').disabled = true;
+            const factBox = document.getElementById('factbox');
+            const fact = await fetchRandomFact();
+            const speed = 0.5;
+            applyRandomShadows(factBox);
+            await typeText(factBox, fact);
+            setTimeout(function() {
+                document.getElementById("btn").disabled = false;
+            }, speed * fact.length);
+        }
+
+        window.addEventListener('load', function() {
+            initialMessage().then(() => {
+                document.getElementById('btn').onclick = function() {
+                    document.getElementById('factbox').style.padding = '30px';
+                    const __ = document.getElementById('factbox').innerHTML;
+                    if (__ == "Click Me to continue ;") document.getElementById('factbox').innerHTML = "";
+                    document.getElementById('me').style.width = '86.9vw';
+                    document.getElementById('factbox').style.width = '86.9vw';
+                    document.getElementById('me').style.height = '18.6vh';
+                    document.getElementById('factbox').style.height = '20.6vh';
+                    displayRandomFact();
+                };
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="loader">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 240 240">
+            <defs>
+                <path id="path1" d="M180.3,103.7C193.9,145.6,69.7,179.9,60,137C46.3,95.1,170.5,60.7,180.3,103.7z"/>
+                <path id="path2" d="M113.5,89.1c79.8-2.3,101.5,66.1,14.4,66.8C48.1,158.4,26.4,90,113.5,89.1z"/>
+                <path id="path3" d="M169.1,123.5c-11.9,44-126.5,79.8-98.2-6.9C82.8,72.6,197.4,36.8,169.1,123.5z"/>
+                <path id="path4" d="M59.8,136.3C46.2,94.4,170.4,60.1,180.1,103C193.8,144.9,69.6,179.3,59.8,136.3z"/>
+                <path id="path5" d="M126.6,150.9c-79.8,2.3-101.5-66.1-14.4-66.8C192,81.6,213.7,150,126.6,150.9z"/>
+                <path id="path6" d="M71,116.5c11.9-44,126.5-79.8,98.2,6.9C157.3,167.4,42.7,203.2,71,116.5z"/>
+            </defs>
+            <path fill="#e1e5ea" stroke="#7d93b1" stroke-width="5" id="lower" d="M160,120c0,22.1-17.9,40-40,40s-40-17.9-40-40"/>
+            <g id="asteroids" fill="#7d93b1" stroke="#e1e5ea" stroke-width="2">
+                <circle r="9"><animateMotion dur="3s" repeatCount="indefinite"><mpath xlink:href="#path1"/></animateMotion></circle>
+                <circle r="8"><animateMotion dur="3s" repeatCount="indefinite"><mpath xlink:href="#path2"/></animateMotion></circle> 
+                <circle r="5"><animateMotion dur="3s" repeatCount="indefinite"><mpath xlink:href="#path3"/></animateMotion></circle> 
+                <circle r="9"><animateMotion dur="3s" repeatCount="indefinite"><mpath xlink:href="#path4"/></animateMotion></circle>
+                <circle r="7"><animateMotion dur="3s" repeatCount="indefinite"><mpath xlink:href="#path5"/></animateMotion></circle>
+                <circle r="6"><animateMotion dur="3s" repeatCount="indefinite"><mpath xlink:href="#path6"/></animateMotion></circle>
+            </g>
+            <path fill="#e1e5ea" stroke="#7d93b1" stroke-width="5" id="upper" d="M80,120c0-22.1,17.9-40,40-40s40,17.9,40,40"/>
+        </svg>
+    </div>
+    <div class="background"></div>
+    <div class="content">
+        <button id="btn">
+            <img id="me" src="https://www.dropbox.com/scl/fi/rve25sxkajtq2z8mda2li/view-source.webp?rlkey=f77lazyayrub7t80cxuz03t9r&raw=1" alt="Sample Image" loading="lazy"/>
+            <div class="factbox" id="factbox"></div>
+        </button>
+    </div>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=K2D:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            font-family: 'K2D', sans-serif;
+        }
+
+        .background {
+            background-image:url("https://www.dropbox.com/scl/fi/rve25sxkajtq2z8mda2li/view-source.webp?rlkey=f77lazyayrub7t80cxuz03t9r&raw=1");
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            filter:blur(15px);
+        }
+
+        .content {
+            z-index: 1;
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        #btn {
+            height: 190px;
+            width: 340px;
+            font-size: 17px;
+            border-radius: 10px;
+            transition: background 0.5s, color 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 30vh;
+            margin-left: 6.9vw;
+            background: rgba(0, 0, 0, 0);
+            border: none;
+        }
+
+        #btn:disabled {
+            opacity: 1;
+            cursor: not-allowed;
+            color: #000;
+        }
+
+        img {
+            width: 53.69vw;
+            height: 6.69vh;
+            border-style: double;
+            border-radius: 10px;
+            border-color: #f0f0ff;
+            border-width: 0.069px;
+            padding: 1px;
+            padding-top:3px;
+            box-shadow: 0 8px 69px -6px #6a0ff9;
+            background-color: rgba(255, 15, 0, 0.29);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .factbox {
+            position: absolute;
+            width: 53.69vw;
+            height: 6.69vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            box-sizing: border-box;
+            border-radius: 6.9px;
+            font-size: 1.019em;
+            cursor: pointer;
+            margin-top: 0;
+            border-radius: 10px;
+            color: #2F4F4F;
+            overflow: auto;
+            transition: width 0.5s, height 0.5s;
+        }
+        
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #e1e5ea;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        svg {
+            height: 69px;
+            width: 69px;
+        }
+    </style>
+</body>
+</html>
